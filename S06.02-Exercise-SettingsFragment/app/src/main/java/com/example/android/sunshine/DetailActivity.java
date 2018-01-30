@@ -52,19 +52,17 @@ public class DetailActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.detail, menu);
         MenuItem menuItem = menu.findItem(R.id.action_share);
         menuItem.setIntent(createShareForecastIntent());
+        MenuItem settingsItem = menu.findItem(R.id.action_settings);
+        settingsItem.setIntent(createSettingsIntent());
         return true;
+
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+    private Intent createSettingsIntent(){
+        return  new Intent(this, SettingsActivity.class);
 
-        if (id == R.id.action_settings) {
-            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
-            startActivity(startSettingsActivity);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
+
+
 }
