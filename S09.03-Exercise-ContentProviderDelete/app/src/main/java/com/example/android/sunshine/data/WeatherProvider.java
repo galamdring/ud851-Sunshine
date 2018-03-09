@@ -26,6 +26,8 @@ import android.support.annotation.NonNull;
 
 import com.example.android.sunshine.utilities.SunshineDateUtils;
 
+import java.security.InvalidParameterException;
+
 /**
  * This class serves as the ContentProvider for all of Sunshine's data. This class allows us to
  * bulkInsert data, query data, and delete data.
@@ -293,7 +295,7 @@ public class WeatherProvider extends ContentProvider {
         return cursor;
     }
 
-//  TODO (1) Implement the delete method of the ContentProvider
+// Completed   TODO (1) Implement the delete method of the ContentProvider
     /**
      * Deletes data at a given URI with optional arguments for more fine tuned deletions.
      *
@@ -304,11 +306,29 @@ public class WeatherProvider extends ContentProvider {
      */
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
-        throw new RuntimeException("Student, you need to implement the delete method!");
+        int rowCount;
+        if (null == selection) selection = "1";
+        int match = sUriMatcher.match(uri);
+        switch (match){
+            case CODE_WEATHER:
+                rowCount = mOpenHelper.getWritableDatabase().delete(
+                        WeatherContract.WeatherEntry.TABLE_NAME,
+                        selection,
+                        selectionArgs);
 
-//          TODO (2) Only implement the functionality, given the proper URI, to delete ALL rows in the weather table
+                break;
 
-//      TODO (3) Return the number of rows deleted
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+
+        }
+        if (rowCount != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+// Completed           TODO (2) Only implement the functionality, given the proper URI, to delete ALL rows in the weather table
+
+// Completed       TODO (3) Return the number of rows deleted
+        return rowCount;
     }
 
     /**
